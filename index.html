@@ -1,0 +1,38 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat em Tempo Real</title>
+</head>
+<body>
+  <ul id="messages"></ul>
+  <form id="chat-form">
+    <input type="text" id="input-message" autocomplete="off" />
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const form = document.getElementById('chat-form');
+    const inputMessage = document.getElementById('input-message');
+    const messages = document.getElementById('messages');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const message = inputMessage.value.trim();
+      if (message !== '') {
+        socket.emit('chat message', message);
+        inputMessage.value = '';
+      }
+    });
+
+    socket.on('chat message', (message) => {
+      const li = document.createElement('li');
+      li.textContent = message;
+      messages.appendChild(li);
+    });
+  </script>
+</body>
+</html>
